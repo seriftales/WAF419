@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+#Bu dosya WAF419 uygulamasının ana çalıştırma dosyasıdır.
 from app.core.proxy import init_app
 import asyncio
 

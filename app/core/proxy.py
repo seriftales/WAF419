@@ -1,3 +1,5 @@
+#Proxy server 
+
 import aiohttp
 import aiohttp.web
 import asyncio 
@@ -14,6 +16,7 @@ async def handle (request) :
     rule = Rules()
 
     logger.info(f"Received {method} request for {path} with headers {headers} and body {body}")
+    logger.info(headers) 
 
     if rule.is_blocked(str(path), body.decode('utf-8')):
         logger.info(f"Request blocked for path: {path}")
@@ -24,7 +27,6 @@ async def handle (request) :
         async with session.request(method, f"{TARGET_SERVER}{path}", headers=headers, data=body) as response:
             response_body = await response.read()
             logger.info(f"Forwarded {method} request to {TARGET_SERVER}{path} with response status {response.status}")
-            print(f"[Response] Status: {response.status}")
             return aiohttp.web.Response(body=response_body, status=response.status, headers=response.headers)
         
 

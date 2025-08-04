@@ -1,5 +1,35 @@
-[
-  "admin",
-  "password",
-  "secret"
-]
+{  
+  "sql_injection": [
+      {
+        "pattern": "union select",
+        "level": "high",
+        "message": "SQL Injection detected: union select",
+        "target": "ARGS"
+      },
+      {
+        "pattern": "' OR 1=1 --",
+        "level": "high",
+        "message": "SQL Injection detected: ' OR 1=1 --",
+        "target": "ARGS"
+      },
+      {
+        "pattern": "select * from",
+        "level": "medium",
+        "message": "SQL Injection detected: select * from",
+        "target": "BODY"
+      },
+      {
+        "pattern": "sleep(",
+        "level": "medium",
+        "message": "SQL Injection detected: sleep() function detected",
+        "target": "BODY"
+      },
+      {
+        "pattern": "--",
+        "level": "low",
+        "message": "Possible SQL Injection detected: comment syntax '--'",
+        "target": "ARGS"
+      }
+    ]
+  }
+
