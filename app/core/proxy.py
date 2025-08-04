@@ -17,7 +17,7 @@ async def handle (request) :
 
     if rule.is_blocked(str(path), body.decode('utf-8')):
         logger.info(f"Request blocked for path: {path}")
-        return aiohttp.web.Response(status=403, text="Forbidden")
+        return aiohttp.web.Response(status=403, text="Forbidden") 
     
     
     async with aiohttp.ClientSession() as session:

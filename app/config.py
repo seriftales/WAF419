@@ -1,17 +1,20 @@
 #Yapılandırma dosyası 
 # Bu dosya, uygulamanın yapılandırma ayarlarını içerir. 
 
-import re
+
+import json 
 
 TARGET_SERVER = "http://127.0.0.1:5000"  # ya da prod url
 PROXY_PORT = 8080
 LOG_PATH = "logs/app.log" 
 HOST = "0.0.0.0" 
 
-KEYWORDS= [
+RULES_FILE = "app/filters/rules.json"
 
-    re.compile(r"(?i)admin"),  # case insensitive admin kelimesi    
-    re.compile(r"(?i)password"),  # case insensitive password kelimesi
-    re.compile(r"(?i)secret"),  # case insensitive secret kelimesi
+try : 
+    with open (RULES_FILE, "r") as f:
+        KEYWORDS = json.load(f)
 
-]
+except Exception as e:
+    print(f"Error loading rules from {RULES_FILE}: {e}")
+    KEYWORDS = []
