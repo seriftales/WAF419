@@ -3,7 +3,7 @@ import aiohttp.web
 import asyncio 
 from app.config import TARGET_SERVER, PROXY_PORT
 from app.utils.logger import logger
-
+from app.filters.filters import Rules  
 
 async def handle (request) : 
 
@@ -11,9 +11,15 @@ async def handle (request) :
     method = request.method
     headers = request.headers
     body = await request.read() 
+    rule = Rules()
 
     logger.info(f"Received {method} request for {path} with headers {headers} and body {body}")
 
+    if rule.is_blocked(str(path), body.decode('utf-8')):
+        logger.info(f"Request blocked for path: {path}")
+        return aiohttp.web.Response(status=403, text="Forbidden")
+    
+    
     async with aiohttp.ClientSession() as session:
         async with session.request(method, f"{TARGET_SERVER}{path}", headers=headers, data=body) as response:
             response_body = await response.read()
