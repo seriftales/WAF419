@@ -1,7 +1,7 @@
 import aiohttp
 import aiohttp.web
 import asyncio 
-from app.config import TARGET_SERVER, PROXY_PORT
+from app.config import TARGET_SERVER, PROXY_PORT , HOST
 from app.utils.logger import logger
 from app.filters.filters import Rules  
 
@@ -23,9 +23,8 @@ async def handle (request) :
     async with aiohttp.ClientSession() as session:
         async with session.request(method, f"{TARGET_SERVER}{path}", headers=headers, data=body) as response:
             response_body = await response.read()
-            status = response.status
             logger.info(f"Forwarded {method} request to {TARGET_SERVER}{path} with response status {response.status}")
-            print(f"[Response] Status: {status}")
+            print(f"[Response] Status: {response.status}")
             return aiohttp.web.Response(body=response_body, status=response.status, headers=response.headers)
         
 
@@ -34,7 +33,7 @@ async def init_app():
     app.router.add_route('*', '/{tail:.*}', handle)
     runner = aiohttp.web.AppRunner(app)
     await runner.setup()
-    site = aiohttp.web.TCPSite(runner, '0.0.0.0', PROXY_PORT) 
+    site = aiohttp.web.TCPSite(runner, HOST, PROXY_PORT) 
     logger.info(f"Starting proxy server on port {PROXY_PORT}")
     await site.start()
 
