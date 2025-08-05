@@ -1,7 +1,7 @@
 {  
-  "sql_injection": [
+  "rules": [
       {
-        "pattern": "union select",
+        "pattern": "admin",
         "level": "high",
         "message": "SQL Injection detected: union select",
         "target": "ARGS"
@@ -12,6 +12,14 @@
         "message": "SQL Injection detected: ' OR 1=1 --",
         "target": "ARGS"
       },
+      
+      {
+        "pattern" : "select" , 
+        "level" : "high" ,
+        "message" : "SQL Injection detected: select statement",
+        "target" : "ARGS"
+      },
+      
       {
         "pattern": "select * from",
         "level": "medium",
@@ -29,7 +37,22 @@
         "level": "low",
         "message": "Possible SQL Injection detected: comment syntax '--'",
         "target": "ARGS"
+      },
+    
+      {
+        "pattern" : "id=1" , 
+        "level" : "high" ,
+        "message" : "SQL Injection detected: id=1",
+        "target" : "ARGS"
+
       }
+    
+    
+    
+    
+    
+    
+    
     ]
   }
 

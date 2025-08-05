@@ -4,6 +4,7 @@
 import re
 from app.config import KEYWORDS
 from app.utils.logger import logger
+from urllib.parse import parse_qs,urlparse
 
 class Rules:
     
@@ -30,15 +31,32 @@ class Rules:
                 else:
                     logger.warning(f"[WAF] Desteklenmeyen kural tipi veya eksik pattern: {rule}")
 
-    def is_blocked(self, path: str, body: str) -> bool:
-        """Verilen yolu ve body'i kontrol et."""
-        combined_text = f"{path} {body}"
-
+    
+    def check_pattern(self, combined_text: str) -> bool:
+        """Gelen text üzerinde kuralları kontrol eder."""
         for rule in self.blocked_patterns:
             if rule["regex"].search(combined_text):
+                #logger.info(f"[WAF] İstek engellendi: '{rule['pattern']}' - {rule['message']} ({rule['category']})")
                 return True
         return False
+    
+    
+    def is_blocked(self, path: str, body: str,query:str) -> bool:
+        combined_text = f"{path}" 
+        if self.check_pattern(combined_text):
+            return True
+        
+        if query : 
+            parsed_query = parse_qs(query)
+            query_string = ' '.join([f"{k}={v[0]}" for k, v in parsed_query.items()])                                             
+      
+            if self.check_pattern(query_string):
+                return True
 
-   
+        combined_text = f" {body}"
+        if self.check_pattern(combined_text):
+            return True
+
+        return False
 
 

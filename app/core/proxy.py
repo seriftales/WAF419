@@ -10,16 +10,16 @@ from app.filters.filters import Rules
 async def handle (request) : 
 
     path = request.rel_url
+    query = request.query_string
     method = request.method
     headers = request.headers
     body = await request.read() 
     rule = Rules()
 
-    logger.info(f"Received {method} request for {path} with headers {headers} and body {body}")
-    logger.info(headers) 
+    logger.info(f"Received {method} request for {path} {query} with headers {headers} and body {body}")
 
-    if rule.is_blocked(str(path), body.decode('utf-8')):
-        logger.info(f"Request blocked for path: {path}")
+    if rule.is_blocked(str(path), body.decode('utf-8'),query):
+        logger.warning(f"Request blocked for path: {path}, body: {body.decode('utf-8')},query: {query}")
         return aiohttp.web.Response(status=403, text="Forbidden") 
     
     
@@ -46,5 +46,4 @@ if __name__ == '__main__':
     try: 
         asyncio.run(init_app()) 
     except KeyboardInterrupt:
-       
-        print("Proxy server stopped by user") 
+       print("Proxy server stopped by user") 
