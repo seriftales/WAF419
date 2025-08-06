@@ -45,17 +45,9 @@
         "message" : "SQL Injection detected: id=1",
         "target" : "ARGS"
 
-      },
-    
-      {
-
-        "pattern" : ".php" , 
-        "level" : "medium" ,
-        "message" : "PHP file access detected: .php in URL",
-        "target" : "URL"
-
       }
-    
+  
+      
     
     
     
